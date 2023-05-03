@@ -11,7 +11,7 @@ class MyProdect extends StatefulWidget {
   var Pimage;
 
   MyProdect(
-      {Key? key,
+      {Key key,
       this.dataone,
       this.datatwo,
       this.datathree,

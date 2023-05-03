@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 
 class clinic extends StatefulWidget {
-  const clinic({Key? key}) : super(key: key);
+  const clinic({Key key}) : super(key: key);
 
   @override
   State<clinic> createState() => _clinicState();

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Fish extends StatefulWidget {
-  const Fish({Key? key}) : super(key: key);
+  const Fish({Key key}) : super(key: key);
 
   @override
   State<Fish> createState() => _FishState();

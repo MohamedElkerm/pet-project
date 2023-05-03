@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Services extends StatefulWidget {
-  const Services({Key? key}) : super(key: key);
+  const Services({Key key}) : super(key: key);
 
   @override
   State<Services> createState() => _ServicesState();

@@ -2,7 +2,7 @@ import 'package:fff/pages/home_management.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 class Signup extends StatefulWidget {
-  const Signup({Key? key}) : super(key: key);
+  const Signup({Key key}) : super(key: key);
 
   @override
   State<Signup> createState() => _SignupState();

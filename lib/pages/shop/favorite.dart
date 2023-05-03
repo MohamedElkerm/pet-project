@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'carts.dart';
 
 class favorite extends StatefulWidget {
-  const favorite({Key? key}) : super(key: key);
+  const favorite({Key key}) : super(key: key);
 
   @override
   State<favorite> createState() => _favoriteState();

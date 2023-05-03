@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Hamster extends StatefulWidget {
-  const Hamster({Key? key}) : super(key: key);
+  const Hamster({Key key}) : super(key: key);
 
   @override
   State<Hamster> createState() => _HamsterState();

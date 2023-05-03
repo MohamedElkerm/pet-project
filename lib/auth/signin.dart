@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Signin extends StatefulWidget {
-  const Signin({Key? key}) : super(key: key);
+  const Signin({Key key}) : super(key: key);
   @override
   State<Signin> createState() => _SigninState();
 }

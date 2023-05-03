@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Notifi extends StatefulWidget {
-  const Notifi({Key? key}) : super(key: key);
+  const Notifi({Key key}) : super(key: key);
 
   @override
   State<Notifi> createState() => _NotifiState();

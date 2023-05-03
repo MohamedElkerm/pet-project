@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class category extends StatefulWidget {
-  const category({Key? key}) : super(key: key);
+  const category({Key key}) : super(key: key);
 
   @override
   State<category> createState() => _categoryState();

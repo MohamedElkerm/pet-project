@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MyBooking extends StatefulWidget {
-  const MyBooking({Key? key}) : super(key: key);
+  const MyBooking({Key key}) : super(key: key);
 
   @override
   State<MyBooking> createState() => _MyBookingState();

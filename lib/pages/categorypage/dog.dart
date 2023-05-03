@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Dog extends StatefulWidget {
-  const Dog({Key? key}) : super(key: key);
+  const Dog({Key key}) : super(key: key);
 
   @override
   State<Dog> createState() => _DogState();

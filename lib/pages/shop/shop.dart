@@ -15,7 +15,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../auth/signup.dart';
 
 class shop extends StatefulWidget {
-  const shop({Key? key}) : super(key: key);
+  const shop({Key key}) : super(key: key);
 
   @override
   State<shop> createState() => _shopState();

@@ -19,7 +19,7 @@ import 'home.dart';
 
 class home_management extends StatefulWidget {
 
-  home_management({Key? key,this.type,this.index}) : super(key: key);
+  home_management({Key key,this.type,this.index}) : super(key: key);
   var type;var index;
 
   @override

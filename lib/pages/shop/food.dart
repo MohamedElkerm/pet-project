@@ -1,4 +1,4 @@
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:fff/cat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,7 +6,7 @@ import 'carts.dart';
 import 'favorite.dart';
 
 class food extends StatefulWidget {
-  const food({Key? key}) : super(key: key);
+  const food({Key key}) : super(key: key);
 
   @override
   State<food> createState() => _foodState();
@@ -157,12 +157,12 @@ class _foodState extends State<food> {
                   color: Colors.blueAccent),
             ),
             actions: [
-              Badge(
-                position: BadgePosition.topEnd(top: 0, end: 1),
-                badgeAnimation: BadgeAnimation.scale(
+              badges.Badge(
+                position: badges.BadgePosition.topEnd(top: 0, end: 1),
+                badgeAnimation: badges.BadgeAnimation.scale(
                     animationDuration: Duration(milliseconds: 300)),
                 badgeContent: Text("$fav"),
-                badgeStyle: BadgeStyle(
+                badgeStyle: badges.BadgeStyle(
                     badgeColor: Colors.white,
                     borderSide: BorderSide(color: Colors.orangeAccent, width: 2)),
                 child: IconButton(
@@ -183,9 +183,9 @@ class _foodState extends State<food> {
               SizedBox(
                 width: 4,
               ),
-              Badge(
-                position: BadgePosition.topEnd(top: 0, end: 1),
-                badgeAnimation: BadgeAnimation.scale(
+              badges.Badge(
+                position: badges.BadgePosition.topEnd(top: 0, end: 1),
+                badgeAnimation: badges.BadgeAnimation.scale(
                     animationDuration: Duration(milliseconds: 300)),
                 badgeContent: Text("$cartItem"),
                 child: IconButton(

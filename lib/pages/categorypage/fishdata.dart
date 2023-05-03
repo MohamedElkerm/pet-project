@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class FishData extends StatefulWidget {
-  const FishData({Key? key, this.datafish}) : super(key: key);
+  const FishData({Key key, this.datafish}) : super(key: key);
 
   final datafish;
 

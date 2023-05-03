@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DogData extends StatefulWidget {
-  const DogData({Key? key, this.datadog}) : super(key: key);
+  const DogData({Key key, this.datadog}) : super(key: key);
 
   final datadog;
 

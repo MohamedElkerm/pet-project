@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../components.dart';
 
 class One extends StatefulWidget {
-  const One({Key? key}) : super(key: key);
+  const One({Key key}) : super(key: key);
 
   @override
   State<One> createState() => _OneState();
@@ -184,7 +184,7 @@ class _OneState extends State<One> {
                             child: TextFormField(
                               controller: name,
                               validator: (val){
-                                if(val!.isEmpty){
+                                if(val.isEmpty){
                                   return ("you must enter data");
                                 }
                                 return null;
@@ -212,7 +212,7 @@ class _OneState extends State<One> {
                             child: TextFormField(
                               controller: petname,
                               validator: (val){
-                                if(val!.isEmpty){
+                                if(val.isEmpty){
                                   return ("you must enter data");
                                 }
                                 return null;
@@ -244,7 +244,7 @@ class _OneState extends State<One> {
                             keyboardType: TextInputType.number,
                             controller: phone,
                             validator: (val){
-                              if(val!.isEmpty){
+                              if(val.isEmpty){
                                 return ("you must enter data");
                               }
                               return null;
@@ -353,7 +353,7 @@ class _OneState extends State<One> {
                           textColor: Colors.white,
                           onPressed: () {
                             var formdata =formstate.currentState;
-                            if (formdata!.validate()){
+                            if (formdata.validate()){
                               print("valid");
                             }
                             else{

@@ -7,7 +7,7 @@ import 'package:slide_countdown/slide_countdown.dart';
 
 class Profile extends StatefulWidget {
   Profile(
-      {Key? key,
+      {Key key,
       this.images,
       this.name,
       this.phone,

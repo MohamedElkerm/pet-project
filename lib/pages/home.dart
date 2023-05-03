@@ -8,7 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'doctorpage/doctors.dart';
 
 class home extends StatefulWidget {
-  const home({Key? key}) : super(key: key);
+  const home({Key key}) : super(key: key);
 
   @override
   State<home> createState() => _homeState();

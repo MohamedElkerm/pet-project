@@ -4,7 +4,7 @@ class DataSearch extends SearchDelegate{
   
   List names=["cat","hamster","dog","bird","fish"];
   
-  List<Widget>? buildActions(BuildContext context) {
+  List<Widget> buildActions(BuildContext context) {
     return[
       IconButton(onPressed: (){
         query="";
@@ -12,7 +12,7 @@ class DataSearch extends SearchDelegate{
     ];
   }
 
-  Widget? buildLeading(BuildContext context) {
+  Widget buildLeading(BuildContext context) {
     return  IconButton(onPressed: (){
       close(context, null);
     }, icon: Icon(Icons.arrow_back));

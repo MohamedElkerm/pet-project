@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Edithome1 extends StatefulWidget {
-  Edithome1({Key? key, this.tradd}) : super(key: key);
+  Edithome1({Key key, this.tradd}) : super(key: key);
 
   var tradd;
 
@@ -228,7 +228,7 @@ class _Edithome1State extends State<Edithome1> {
                                 names = val;
                               },
                               validator: (val) {
-                                if (val!.length > 10) {
+                                if (val.length > 10) {
                                   return "title should be less than 10 ";
                                 }
 
@@ -256,7 +256,7 @@ class _Edithome1State extends State<Edithome1> {
                                 prices = val;
                               },
                               validator: (val) {
-                                if (val!.length > 50) {
+                                if (val.length > 50) {
                                   return "notes should be less than 50 ";
                                 }
 
@@ -373,7 +373,7 @@ class _Edithome1State extends State<Edithome1> {
                             sales = val;
                           },
                           validator: (val) {
-                            if (val!.length > 50) {
+                            if (val.length > 50) {
                               return "notes should be less than 50 ";
                             }
 
@@ -399,7 +399,7 @@ class _Edithome1State extends State<Edithome1> {
                         child: MaterialButton(
                           onPressed: () {
                             var formdata = formKey.currentState;
-                            if (formdata!.validate()) {
+                            if (formdata.validate()) {
                               formdata.save();
                               print("valid");
                             } else {

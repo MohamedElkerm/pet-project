@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 class add_animal extends StatefulWidget {
-  const add_animal({Key? key}) : super(key: key);
+  const add_animal({Key key}) : super(key: key);
 
   @override
   State<add_animal> createState() => _add_animalState();

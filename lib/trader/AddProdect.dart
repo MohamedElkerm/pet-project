@@ -9,7 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import '../components.dart';
 
 class AddProdect extends StatefulWidget {
-  AddProdect({Key? key}) : super(key: key);
+  AddProdect({Key key}) : super(key: key);
 
   @override
   State<AddProdect> createState() => _AddProdectState();

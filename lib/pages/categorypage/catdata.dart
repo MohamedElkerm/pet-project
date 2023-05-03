@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CatData extends StatefulWidget {
-  const CatData({Key? key, this.datacat}) : super(key: key);
+  const CatData({Key key, this.datacat}) : super(key: key);
 
   final datacat;
 

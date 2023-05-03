@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Bird extends StatefulWidget {
-  const Bird({Key? key}) : super(key: key);
+  const Bird({Key key}) : super(key: key);
 
   @override
   State<Bird> createState() => _BirdState();

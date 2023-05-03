@@ -10,7 +10,7 @@ import 'package:image_picker/image_picker.dart';
 
 class edit_profile extends StatefulWidget {
   edit_profile(
-      {Key? key,
+      {Key key,
       this.petimage,
       this.petName,
       this.time,
@@ -61,7 +61,7 @@ class _edit_profileState extends State<edit_profile> {
                       child: IconButton(
                           onPressed: () {
                             var formdata = formKey.currentState;
-                            if (formdata!.validate()) {
+                            if (formdata.validate()) {
                               formdata.save();
                               print("valid");
                             } else {
@@ -222,7 +222,7 @@ class _edit_profileState extends State<edit_profile> {
                             },
                             labelText: "name",
                             validator: (value) =>
-                                value!.isEmpty ? "enter a valid Name" : null)),
+                                value.isEmpty ? "enter a valid Name" : null)),
                   ),
                   Center(
                     child: Text(
@@ -259,7 +259,7 @@ class _edit_profileState extends State<edit_profile> {
                               },
                               labelText: "phone",
                               validator: (value) =>
-                                  value!.isEmpty ? "enter a valid Phone" : null,
+                                  value.isEmpty ? "enter a valid Phone" : null,
                             )),
                         SizedBox(
                           height: 8,
@@ -285,7 +285,7 @@ class _edit_profileState extends State<edit_profile> {
                                 addressController = val;
                               },
                               labelText: "address",
-                              validator: (value) => value!.isEmpty
+                              validator: (value) => value.isEmpty
                                   ? "enter a valid Address"
                                   : null,
                             )),
