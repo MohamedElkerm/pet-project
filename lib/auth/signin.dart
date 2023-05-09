@@ -165,6 +165,13 @@ class _SigninState extends State<Signin> {
                               child: Text(
                                 "Register",
                                 style: TextStyle(
+
+
+
+
+
+
+
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20,
                                     color: Color(0xff269A41)),
