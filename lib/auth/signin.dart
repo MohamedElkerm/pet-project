@@ -161,8 +161,7 @@ class _SigninState extends State<Signin> {
                                   MaterialPageRoute(
                                     builder: (context) => Signup(),
                                   ),
-                                );
-                              },
+                                );},
                               child: Text(
                                 "Register",
                                 style: TextStyle(
