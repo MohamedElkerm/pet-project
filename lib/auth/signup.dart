@@ -184,13 +184,13 @@ class _SignupState extends State<Signup> {
                           onPressed: () {
                             if( kind =="Customer"){
                              int indexKind =0;
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => home_management(type: kind,index: indexKind,),));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => home_management(type: "Customer",index: indexKind,),),);
                             }if(kind=="Vet"){
                               int indexKind =1;
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => home_management(type: kind,index: indexKind),));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => home_management(type: "Vet",index: indexKind),));
                             }if(kind=="Trader") {
                               int indexKind =2;
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => home_management(type: kind,index: indexKind),));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => home_management(type: "Trader",index: indexKind),));
                             }
 
                             //  if( name =="Customer"){

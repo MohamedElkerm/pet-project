@@ -37,6 +37,10 @@ dependencies:
   custom_navigation_bar:
   stateful_builder_controller:
 
+  dio:
+  flutter_bloc:
+  bloc:
+
 
 
   # The following adds the Cupertino Icons font to your application.

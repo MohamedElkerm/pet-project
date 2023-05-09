@@ -1,5 +1,6 @@
 import 'package:fff/auth/signin.dart';
 import 'package:fff/auth/splashscreen.dart';
+import 'package:fff/helper/remote/dio_helper.dart';
 import 'package:fff/pages/profile/edit_profile.dart';
 import 'package:fff/pages/profile/profile.dart';
 import 'package:fff/pages/shop/carts.dart';
@@ -9,7 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timer_builder/timer_builder.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await DioHelper.init();
+
   runApp( MyApp());
 }
 
@@ -36,6 +40,11 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
 //
 // class RecommendScreen extends StatelessWidget {
 // @override
