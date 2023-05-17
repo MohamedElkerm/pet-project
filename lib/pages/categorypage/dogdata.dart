@@ -1,3 +1,5 @@
+import 'package:fff/helper/constants.dart';
+import 'package:fff/helper/end_points.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -48,7 +50,7 @@ class _DogDataState extends State<DogData> {
                                     bottomLeft: Radius.circular(25),
                                     bottomRight: Radius.circular(25)),
                                 image: DecorationImage(
-                                    image: AssetImage(widget.datadog['image']),fit: BoxFit.fill)),
+                                    image: NetworkImage('${AppEndPoints.imageBaseURL}${globalPet.img}'),fit: BoxFit.fill)),
                           ),
                           Container(
                             width: 35,
@@ -74,7 +76,7 @@ class _DogDataState extends State<DogData> {
                       Container(
                         alignment: Alignment.topLeft,
                         child: Text(
-                          "  ${widget.datadog['type']}",
+                          "${globalPet.name}",
                           style: TextStyle(
                               fontSize: 30.sp, fontWeight: FontWeight.bold),
                         ),
@@ -85,7 +87,7 @@ class _DogDataState extends State<DogData> {
                       Container(
                         alignment: Alignment.topLeft,
                         child: Text(
-                          "${widget.datadog['sub']}",
+                          "${globalPet.description}",
                           style: TextStyle(
                               fontSize: 30.sp, fontWeight: FontWeight.bold),
                         ),

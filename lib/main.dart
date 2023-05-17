@@ -9,6 +9,11 @@ import 'package:fff/tast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timer_builder/timer_builder.dart';
+// myToken =
+// eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTkyLjE2OC4xLjUvYXBpL2xvZ2luIiwiaWF0IjoxNjgzNTk0NDA5LCJleHAiOjE2ODM1OTgwMDksIm5iZiI6MTY4MzU5NDQwOSwianRpIjoibEpCNUdMNmx5QzByWXRHbiIsInN1YiI6IjExIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.iZR5AtyJ4cTHT7YCWrgxaYVD5IhIh_YHtljeucYlF9E
+
+// my Host
+// http://192.168.1.5/
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();

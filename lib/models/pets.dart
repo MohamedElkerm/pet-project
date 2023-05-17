@@ -2,28 +2,6 @@
 //
 //     final pets = petsFromJson(jsonString);
 
-import 'dart:convert';
-
-Pets petsFromJson(String str) => Pets.fromJson(json.decode(str));
-
-String petsToJson(Pets data) => json.encode(data.toJson());
-
-class Pets {
-  List<Pet> pets;
-
-  Pets({
-    this.pets,
-  });
-
-  factory Pets.fromJson(Map<String, dynamic> json) => Pets(
-    pets: List<Pet>.from(json["pets"].map((x) => Pet.fromJson(x))),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "pets": List<dynamic>.from(pets.map((x) => x.toJson())),
-  };
-}
-
 class Pet {
   int id;
   int userId;

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:fff/helper/constants.dart';
 import 'package:fff/helper/end_points.dart';
 import 'package:fff/helper/naigation.dart';
 import 'package:fff/helper/remote/dio_helper.dart';
@@ -19,6 +20,13 @@ class _SigninState extends State<Signin> {
   bool visible = false;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    CartItemsForBadges.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -165,13 +173,6 @@ class _SigninState extends State<Signin> {
                               child: Text(
                                 "Register",
                                 style: TextStyle(
-
-
-
-
-
-
-
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20,
                                     color: Color(0xff269A41)),
@@ -202,12 +203,18 @@ class _SigninState extends State<Signin> {
       'email':email,
       'password':password,
     }).then((value) {
+      CartItemsForBadges.clear();
+      userPassword = password.toString();
+
       print('login Success');
       print(value.toString());
-      Auth user = Auth.fromJson(value.data);
+      setState(() {
+        globalUser = Auth.fromJson(value.data);
+
+      });
       print("data from Json");
-      print(user);
-      toggleBetweenScreens(user);
+      print(globalUser);
+      toggleBetweenScreens(globalUser);
     }).catchError((err) {
       print('login Error : ');
       print(err.toString());

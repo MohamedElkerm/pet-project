@@ -1,3 +1,5 @@
+import 'package:fff/helper/constants.dart';
+import 'package:fff/helper/end_points.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -48,7 +50,7 @@ class _CatDataState extends State<CatData> {
                                     bottomLeft: Radius.circular(25),
                                     bottomRight: Radius.circular(25)),
                                 image: DecorationImage(
-                                    image: AssetImage(widget.datacat['image']),fit: BoxFit.fill)),
+                                    image: NetworkImage('${AppEndPoints.imageBaseURL}${globalPet.img}'),fit: BoxFit.fill)),
                           ),
                           Container(
                             width: 35,
@@ -74,7 +76,7 @@ class _CatDataState extends State<CatData> {
                       Container(
                         alignment: Alignment.topLeft,
                         child: Text(
-                          "  ${widget.datacat['type']}",
+                          "${globalPet.name}",
                           style: TextStyle(
                               fontSize: 30.sp, fontWeight: FontWeight.bold),
                         ),
@@ -85,7 +87,7 @@ class _CatDataState extends State<CatData> {
                       Container(
                         alignment: Alignment.topLeft,
                         child: Text(
-                          "${widget.datacat['sub']}",
+                          "${globalPet.description}",
                           style: TextStyle(
                               fontSize: 30.sp, fontWeight: FontWeight.bold),
                         ),

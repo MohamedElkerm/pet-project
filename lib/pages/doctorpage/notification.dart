@@ -1,3 +1,7 @@
+import 'package:fff/helper/constants.dart';
+import 'package:fff/helper/end_points.dart';
+import 'package:fff/helper/remote/dio_helper.dart';
+import 'package:fff/models/notifications.dart';
 import 'package:flutter/material.dart';
 
 class Notifi extends StatefulWidget {
@@ -35,6 +39,11 @@ class _NotifiState extends State<Notifi> {
       "time": "18m ago"
     }
   ];
+  @override
+  void initState() {
+    // TODO: implement initState
+    getNotifications();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,21 +66,42 @@ class _NotifiState extends State<Notifi> {
             )),
       ),
       body: ListView.builder(
-          itemCount: not.length,
+          itemCount: myNotifications.length,
           itemBuilder: (context, i) {
             return ListTile(
               leading: Container(
                 width: 80,
                 height: 80,
-                child: Image.asset("${not[i]['image']}",),
+                child: Image.asset(
+                  "${not[i]['image']}",
+                ),
               ),
               title: Text(
-                "${not[i]['description']}",
+                "${myNotifications[i].notification}",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              subtitle: Text("${not[i]['time']}"),
+              subtitle: Text("${myNotifications[i].created_at}"),
             );
           }),
     );
+  }
+
+  List<MyNotification> myNotifications = [];
+  getNotifications() async {
+    print('notifications');
+    await DioHelper.getData(
+      url: AppEndPoints.notifications,
+      token: globalUser.token,
+    ).then((value) {
+      value.data['notifications'].forEach((e){
+        myNotifications.add(MyNotification.fromJson(e));
+      });
+      setState(() {
+        myNotifications;
+      });
+    }).catchError((err) {
+      print(err.toString());
+    });
+    print('notifications');
   }
 }

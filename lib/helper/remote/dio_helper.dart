@@ -38,12 +38,34 @@ class DioHelper {
 
   static Future<Response> putData({@required String url,@required data,token}) async {
     // print(token.toString());
-    if(token != null){
+    // if(token != null){
       dio.options.headers["Authorization"] = 'Bearer $token';
-    }
+      // dio.options.headers['Content-Type']= 'multipart/form-data';
+
+    // }
 
 
     return await dio.put(url,data: data,);
+  }
+
+  static Future<Response> putImage({@required String url,@required data,token}) async {
+    // print(token.toString());
+    // if(token != null){
+    dio.options.headers["Authorization"] = 'Bearer $token';
+    dio.options.headers['Content-Type']= 'multipart/form-data';
+
+    // }
+
+
+    return await dio.put(url,data: data,);
+  }
+  static Future<Response> postImage(
+      {@required url, query, @required data, lang = 'ar', token}) async {
+    if(token != null){
+      dio.options.headers["Authorization"] = 'Bearer $token';
+    }
+    dio.options.headers['Content-Type']= 'multipart/form-data';
+    return await dio.post(url, queryParameters: query, data: data);
   }
 
   static Future<Response> deleteData({@required url,data})async{

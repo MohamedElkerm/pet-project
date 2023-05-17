@@ -1,3 +1,4 @@
+import 'package:fff/helper/end_points.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -440,8 +441,8 @@ Widget categ({image, name, context}) => Container(
               topLeft: Radius.circular(25),
               topRight: Radius.circular(25),
             ),
-            child: Image.asset(
-              image,
+            child: Image.network(
+              '${AppEndPoints.imageBaseURL}${image}',
               width: double.infinity,
               fit: BoxFit.cover,
             ),

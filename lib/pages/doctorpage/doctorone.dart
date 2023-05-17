@@ -1,3 +1,7 @@
+import 'package:fff/helper/constants.dart';
+import 'package:fff/helper/end_points.dart';
+import 'package:fff/helper/remote/dio_helper.dart';
+import 'package:fff/helper/snack_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,8 +25,7 @@ class _OneState extends State<One> {
   double _oldRating = 4;
   double _totalRatings = 1.5;
 
-  GlobalKey<FormState>formstate=new GlobalKey<FormState>();
-
+  GlobalKey<FormState> formstate = new GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -33,13 +36,18 @@ class _OneState extends State<One> {
       body: Form(
         key: formstate,
         child: Container(
-            color:Colors.grey[400],
+            color: Colors.grey[400],
             height: double.infinity,
             child: ListView(shrinkWrap: true, children: [
               Stack(
                 children: [
-                  Image.asset(
+                  globalUser.user.img==null? Image.asset(
                     "images/doc.jpg",
+                    fit: BoxFit.fill,
+                    height: 330,
+                    width: double.infinity,
+                  ):Image.network(
+                    "${AppEndPoints.imageBaseURL}${globalUser.user.img}",
                     fit: BoxFit.fill,
                     height: 330,
                     width: double.infinity,
@@ -114,7 +122,7 @@ class _OneState extends State<One> {
                                     color: Colors.white,
                                     fontSize: 20.sp,
                                     fontWeight: FontWeight.bold)),
-                            Text("${_totalRatings + _rating/5}",
+                            Text("${_totalRatings + _rating / 5}",
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 20.sp,
@@ -125,11 +133,12 @@ class _OneState extends State<One> {
                     ),
                   )
                 ],
-              ),              SizedBox(
+              ),
+              SizedBox(
                 height: 10.h,
               ),
               Text(
-                " Dr.Vet",
+                'Dr.${globalVet.firstname} ${globalVet.lastname}',
                 style: TextStyle(
                     fontSize: 30.sp,
                     fontWeight: FontWeight.bold,
@@ -139,7 +148,7 @@ class _OneState extends State<One> {
                 height: 3.h,
               ),
               Text(
-                "   address",
+                globalVet.address==null?'': globalVet.address,
                 style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
               ),
               SizedBox(
@@ -183,8 +192,8 @@ class _OneState extends State<One> {
                           child: Center(
                             child: TextFormField(
                               controller: name,
-                              validator: (val){
-                                if(val.isEmpty){
+                              validator: (val) {
+                                if (val.isEmpty) {
                                   return ("you must enter data");
                                 }
                                 return null;
@@ -194,12 +203,15 @@ class _OneState extends State<One> {
                                 fillColor: Colors.white,
                                 hintText: "Name",
                                 hintStyle: TextStyle(
-                                    fontSize: 20.sp, fontWeight: FontWeight.bold),
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.bold),
                               ),
                             ),
                           ),
                         ),
-                        SizedBox(width: 5.w,),
+                        SizedBox(
+                          width: 5.w,
+                        ),
                         Container(
                           decoration: BoxDecoration(
                               color: Colors.white,
@@ -211,8 +223,8 @@ class _OneState extends State<One> {
                           child: Center(
                             child: TextFormField(
                               controller: petname,
-                              validator: (val){
-                                if(val.isEmpty){
+                              validator: (val) {
+                                if (val.isEmpty) {
                                   return ("you must enter data");
                                 }
                                 return null;
@@ -222,7 +234,8 @@ class _OneState extends State<One> {
                                 fillColor: Colors.white,
                                 hintText: "Pet name",
                                 hintStyle: TextStyle(
-                                    fontSize: 20.sp, fontWeight: FontWeight.bold),
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.bold),
                               ),
                             ),
                           ),
@@ -233,8 +246,7 @@ class _OneState extends State<One> {
                     Center(
                       child: Container(
                         decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(width: 1)),
+                            color: Colors.white, border: Border.all(width: 1)),
                         height: 45.h,
                         width: 280.w,
                         // margin: EdgeInsets.only(
@@ -243,8 +255,8 @@ class _OneState extends State<One> {
                           child: TextFormField(
                             keyboardType: TextInputType.number,
                             controller: phone,
-                            validator: (val){
-                              if(val.isEmpty){
+                            validator: (val) {
+                              if (val.isEmpty) {
                                 return ("you must enter data");
                               }
                               return null;
@@ -266,7 +278,7 @@ class _OneState extends State<One> {
                       children: [
                         Container(
                           height: 45.h,
-                          width:170.w,
+                          width: 170.w,
                           //  margin: EdgeInsets.only(top: 10,bottom: 10,right: 25,left: 15),
                           decoration: BoxDecoration(
                             border: Border.all(width: 1),
@@ -278,20 +290,21 @@ class _OneState extends State<One> {
                               hint: Text(
                                 " select day",
                                 style: TextStyle(
-                                    fontSize: 23.sp, fontWeight: FontWeight.bold),
+                                    fontSize: 23.sp,
+                                    fontWeight: FontWeight.bold),
                               ),
-                              items: ["Sat", "Sun", "Mon","Tue","Wed","Thu"]
+                              items: ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu"]
                                   .map((e) => DropdownMenuItem(
-                                child: Center(
-                                  child: Text(
-                                    " $e",
-                                    style: TextStyle(
-                                        fontSize: 20.sp,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                value: e,
-                              ))
+                                        child: Center(
+                                          child: Text(
+                                            " $e",
+                                            style: TextStyle(
+                                                fontSize: 20.sp,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        value: e,
+                                      ))
                                   .toList(),
                               onChanged: (val) {
                                 setState(() {
@@ -302,10 +315,12 @@ class _OneState extends State<One> {
                             ),
                           ),
                         ),
-                        SizedBox(width: 5.w,),
+                        SizedBox(
+                          width: 5.w,
+                        ),
                         Container(
                           height: 45.h,
-                          width:170.w,
+                          width: 170.w,
                           //  margin: EdgeInsets.only(top: 10,bottom: 10,left: 15),
                           decoration: BoxDecoration(
                             border: Border.all(width: 1),
@@ -317,20 +332,28 @@ class _OneState extends State<One> {
                               hint: Text(
                                 " select hour",
                                 style: TextStyle(
-                                    fontSize: 23.sp, fontWeight: FontWeight.bold),
+                                    fontSize: 23.sp,
+                                    fontWeight: FontWeight.bold),
                               ),
-                              items: ["5 PM", "6 PM", "7 PM","8 PM","9 PM","10 PM"]
+                              items: [
+                                "5 PM",
+                                "6 PM",
+                                "7 PM",
+                                "8 PM",
+                                "9 PM",
+                                "10 PM"
+                              ]
                                   .map((e) => DropdownMenuItem(
-                                child: Center(
-                                  child: Text(
-                                    " $e",
-                                    style: TextStyle(
-                                        fontSize: 20.sp,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                value: e,
-                              ))
+                                        child: Center(
+                                          child: Text(
+                                            " $e",
+                                            style: TextStyle(
+                                                fontSize: 20.sp,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        value: e,
+                                      ))
                                   .toList(),
                               onChanged: (val) {
                                 setState(() {
@@ -343,24 +366,30 @@ class _OneState extends State<One> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 20.h,),
+                    SizedBox(
+                      height: 20.h,
+                    ),
                     Center(
                       child: Container(
                         width: 275.w,
                         height: 50.h,
                         child: MaterialButton(
-                          color:Color(0xff075965),
+                          color: Color(0xff075965),
                           textColor: Colors.white,
                           onPressed: () {
-                            var formdata =formstate.currentState;
-                            if (formdata.validate()){
+                            var formdata = formstate.currentState;
+                            if (formdata.validate()) {
                               print("valid");
-                            }
-                            else{
+                              book(
+                                doctor_id: globalVet.id,
+                                pet_name: petname.text.trim(),
+                                date: day.toString(),
+                                time: hour.toString(),
+                              );
+                            } else {
                               print("not valid");
                             }
                           },
-
                           child: Text(
                             "Book",
                             style: TextStyle(
@@ -369,10 +398,40 @@ class _OneState extends State<One> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 5,)
+                    SizedBox(
+                      height: 5,
+                    )
                   ])
             ])),
       ),
     );
+  }
+
+  book({
+    @required doctor_id,
+    @required pet_name,
+    @required date,
+    @required time,
+  }) async {
+    print('start booking');
+    await DioHelper.postData(
+      token: globalUser.token,
+      url: AppEndPoints.booking,
+      data: {
+        "doctor_id": doctor_id,
+        "pet_name": pet_name,
+        "date": "2023-04-30",
+        "time": "18:18:00",
+      },
+    ).then((value) {
+      print('start booking success');
+      showSnackBar(context: context, text: 'booked success', clr: Colors.green);
+      print('booked success');
+    }).catchError((err) {
+      print('booked Error');
+      print('${err.toString()}');
+      showSnackBar(context: context, text: 'booked error', clr: Colors.red);
+    });
+    print('start booking');
   }
 }
