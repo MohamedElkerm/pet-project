@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BirdData extends StatefulWidget {
-  const BirdData({Key? key, this.birddata}) : super(key: key);
+  const BirdData({Key key, this.birddata}) : super(key: key);
 
   final birddata;
 

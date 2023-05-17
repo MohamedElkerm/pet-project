@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Cat extends StatefulWidget {
-  const Cat({Key? key}) : super(key: key);
+  const Cat({Key key}) : super(key: key);
 
   @override
   State<Cat> createState() => _CatState();

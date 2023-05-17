@@ -1,8 +1,10 @@
+import 'package:fff/helper/constants.dart';
+import 'package:fff/helper/end_points.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class FishData extends StatefulWidget {
-  const FishData({Key? key, this.datafish}) : super(key: key);
+  const FishData({Key key, this.datafish}) : super(key: key);
 
   final datafish;
 
@@ -48,7 +50,7 @@ class _FishDataState extends State<FishData> {
                                     bottomLeft: Radius.circular(25),
                                     bottomRight: Radius.circular(25)),
                                 image: DecorationImage(
-                                    image: AssetImage(widget.datafish['image']),fit: BoxFit.fill)),
+                                    image: NetworkImage('${AppEndPoints.imageBaseURL}${globalPet.img}'),fit: BoxFit.fill)),
                           ),
                           Container(
                             width: 35,
@@ -74,7 +76,7 @@ class _FishDataState extends State<FishData> {
                       Container(
                         alignment: Alignment.topLeft,
                         child: Text(
-                          "  ${widget.datafish['type']}",
+                          "${globalPet.name}",
                           style: TextStyle(
                               fontSize: 30.sp, fontWeight: FontWeight.bold),
                         ),
@@ -85,7 +87,7 @@ class _FishDataState extends State<FishData> {
                       Container(
                         alignment: Alignment.topLeft,
                         child: Text(
-                          "${widget.datafish['sub']}",
+                          "${globalPet.description}",
                           style: TextStyle(
                               fontSize: 30.sp, fontWeight: FontWeight.bold),
                         ),

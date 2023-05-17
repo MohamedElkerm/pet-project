@@ -1,5 +1,15 @@
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:fff/components.dart';
+import 'package:fff/helper/constants.dart';
+import 'package:fff/helper/end_points.dart';
+import 'package:fff/helper/remote/dio_helper.dart';
+import 'package:fff/models/categories.dart';
+import 'package:fff/models/products.dart';
+import 'package:fff/models/vets.dart';
+import 'package:fff/pages/categorypage/cat.dart';
 import 'package:fff/pages/categorypage/category.dart';
+import 'package:fff/pages/categorypage/dog.dart';
+import 'package:fff/pages/categorypage/fish.dart';
 import 'package:fff/pages/shop/pet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,32 +18,30 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'doctorpage/doctors.dart';
 
 class home extends StatefulWidget {
-  const home({Key? key}) : super(key: key);
+  const home({Key key}) : super(key: key);
 
   @override
   State<home> createState() => _homeState();
 }
 
 class _homeState extends State<home> {
-  List nn=[
-    {
-    "name":"Cat",
-      "image":"images/cat.jpg"
-  },{
-      "name":"Dog",
-      "image":"images/dog1.jpg"
-    },{
-      "name":"Hamster",
-      "image":"images/hamaster.jpg"
-    },{
-      "name":"Bird",
-      "image":"images/bird.jpg"
-    },{
-      "name":"Fish",
-      "image":"images/fish.jpg"
-    },
+  List nn = [
+    {"name": "Cat", "image": "images/cat.jpg"},
+    {"name": "Dog", "image": "images/dog1.jpg"},
+    {"name": "Hamster", "image": "images/hamaster.jpg"},
+    {"name": "Bird", "image": "images/bird.jpg"},
+    {"name": "Fish", "image": "images/fish.jpg"},
   ];
   bool icon = true;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getVets();
+    getCategories();
+    getProducts();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -99,107 +107,111 @@ class _homeState extends State<home> {
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Container(
-                    height: 380,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                      color: Colors.white,
-                    ),
-                    child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        physics: BouncingScrollPhysics(),
-                        itemBuilder: (context, index) => Container(
-                              width: 200,
-                              height: 350,
-                              child: Card(
-                                color: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                elevation: 7,
-                                margin: EdgeInsets.all(10),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
-                                     ),
-                                  child: Column(
+                  height: 380,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    color: Colors.white,
+                  ),
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    physics: BouncingScrollPhysics(),
+                    itemBuilder: (context, index) => Container(
+                      width: 200,
+                      height: 350,
+                      child: Card(
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        elevation: 7,
+                        margin: EdgeInsets.all(10),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Column(
+                            children: [
+                              Stack(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(12),
+                                      topRight: Radius.circular(12),
+                                    ),
+                                    child:myProducts[index].img !=null? Image.network(
+                                      "${AppEndPoints.imageBaseURL}${myProducts[index].img}",
+                                      height: 215,
+                                      width: 180,
+                                      fit: BoxFit.cover,
+                                    ):Image.asset("images/doc1.jpg",fit: BoxFit.cover,),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Column(
+                                children: [
+                                  Center(
+                                    child: Text(
+                                      myProducts[index].title,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 25,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    myProducts[index].type,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Stack(
+                                      Container(
+                                        width: 122,
+                                        child: Column(
                                           children: [
-                                            ClipRRect(
-                                              borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(12),
-                                                topRight: Radius.circular(12),
-                                              ),
-                                              child: Image.asset(
-                                                "images/cat.jpg",
-                                                height: 215,
-                                                width: 180,
-                                                fit: BoxFit.cover,
+                                            Text(
+                                              myProducts[index].price,
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
                                               ),
                                             ),
                                           ],
                                         ),
-
-                                      SizedBox(
-                                        height: 10,
                                       ),
-                                      Column(
-                                        children: [
-                                          Center(
-                                            child: Text("Cat",
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                    fontSize: 25,
-                                                    color: Colors.black,
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Text(
-                                              " writing description of product nnnnnnnnnnn",
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                fontSize: 20,
-                                                color: Colors.black,
-                                              )),
-                                          SizedBox(
-                                            height: 15,
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Container(
-                                                width: 122,
-                                                child: Column(
-                                                  children: [
-                                                    Text("250 EL",
-                                                        style: TextStyle(
-                                                            fontSize: 20,
-                                                            color: Colors.black,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold)),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          )
-                                        ],
-                                      )
                                     ],
-                                  ),
-                                ),
+                                  )
+                                ],
                               ),
-                            ),
-                        separatorBuilder: (context, index) => SizedBox(
-                              width: 1,
-                            ),
-                        itemCount: 7)),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    separatorBuilder: (context, index) => SizedBox(
+                      width: 1,
+                    ),
+                    itemCount: myProducts.length,
+                  ),
+                ),
               ),
               // SizedBox(height: 300,),
               InkWell(
@@ -221,91 +233,92 @@ class _homeState extends State<home> {
                           fontSize: 21, color: Colors.deepOrangeAccent)),
                 ),
               ),
+
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Container(
-                    height: 260,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                      color: Colors.white,
-                    ),
-                    child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        physics: BouncingScrollPhysics(),
-                        itemBuilder: (context, index) => Container(
-                          width: 200,
-                          height: 270,
-                           child: Card(
-                             color: Colors.white,
-                             shape: RoundedRectangleBorder(
-                               borderRadius: BorderRadius.circular(24),
-                             ),
-                             elevation: 7,
-                             margin: EdgeInsets.all(10),
-                             child: Column(
-                                children: [
-                                  Stack(
-                                    children: [
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(23),
-                                          topRight: Radius.circular(18),
-                                        ),
-                                        child: Image.asset(
-                                          "images/doc1.jpg",
-                                          height: 200,
-                                          width: 180,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.only(top: 9),
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(22),
-                                                bottomRight:
-                                                Radius.circular(20))),
-                                        height: 35,
-                                        width: 65,
-                                      ),
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.yellow,
-                                            size: 29,
-                                          ),
-                                          Text(
-                                            "4.9",
-                                            style: TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold),
-                                          )
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Center(
-                                    child: Text(
-                                      "Dr.vet",
-                                      style: TextStyle(
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  )
-                                ],
-                            ),
-                             ),
+                  height: 260,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    color: Colors.white,
+                  ),
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    physics: BouncingScrollPhysics(),
+                    itemBuilder: (context, index) => Container(
+                      width: 200,
+                      height: 270,
+                      child: Card(
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                        elevation: 7,
+                        margin: EdgeInsets.all(10),
+                        child: Column(
+                          children: [
+                            Stack(
+                              children: [
+                                ClipRRect(
 
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(23),
+                                    topRight: Radius.circular(18),
+                                  ),
+                                  child:myVets[index].img!=null? Image.asset(
+                                    "${AppEndPoints.imageBaseURL}${myVets[index].img}",
+                                    height: 200,
+                                    width: 180,
+                                    fit: BoxFit.cover,
+                                  ):Image.asset("images/doc1.jpg",fit: BoxFit.cover,),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.only(top: 9),
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(22),
+                                          bottomRight: Radius.circular(20))),
+                                  height: 35,
+                                  width: 65,
+                                ),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.yellow,
+                                      size: 29,
+                                    ),
+                                    Text(
+                                      "4.9",
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold),
+                                    )
+                                  ],
+                                )
+                              ],
                             ),
-                        separatorBuilder: (context, index) => SizedBox(
-                              width: 1,
+                            SizedBox(
+                              height: 5,
                             ),
-                        itemCount: 7)),
+                            Center(
+                              child: Text(
+                                "Dr.${myVets[index].firstname} ${myVets[index].lastname}",
+                                style: TextStyle(
+                                    fontSize: 25, fontWeight: FontWeight.bold),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    separatorBuilder: (context, index) => SizedBox(
+                      width: 1,
+                    ),
+                    itemCount: myVets.length,
+                  ),
+                ),
               ),
               InkWell(
                 onTap: () => Navigator.of(context)
@@ -329,76 +342,79 @@ class _homeState extends State<home> {
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Container(
-                    height: 280,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                      color: Colors.white,
-                    ),
-                    child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        physics: BouncingScrollPhysics(),
-                        itemBuilder: (context, index) => Container(
-                              width: 200,
-                              height: 270,
-                              child: Card(
-                                color: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                elevation: 7,
-                                margin: EdgeInsets.all(10),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
-                                     ),
-                                  child: Column(
-                                    children: [
-                                       Stack(
-                                          children: [
-                                            ClipRRect(
-                                              borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(12),
-                                                topRight: Radius.circular(12),
-                                              ),
-                                              child: Image.asset(
-                                                nn[index]['image'],
-                                                height: 210,
-                                                width: 180,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Column(
-                                        children: [
-                                          Center(
-                                            child: Text("${nn[index]['name']}",
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                    fontSize: 25,
-                                                    color: Colors.black,
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                        ],
-                                      )
-                                    ],
+                  height: 280,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    color: Colors.white,
+                  ),
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    physics: BouncingScrollPhysics(),
+                    itemBuilder: (context, index) => Container(
+                      width: 200,
+                      height: 270,
+                      child: Card(
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        elevation: 7,
+                        margin: EdgeInsets.all(10),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Column(
+                            children: [
+                              Stack(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(12),
+                                      topRight: Radius.circular(12),
+                                    ),
+                                    child: Image.network(
+                                      '${AppEndPoints.imageBaseURL}${myCategories[index].img}',
+                                      height: 210,
+                                      width: 180,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
-                            ),
-                        separatorBuilder: (context, index) => SizedBox(
-                              width: 1,
-                            ),
-                        itemCount: nn.length)),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Column(
+                                children: [
+                                  Center(
+                                    child: Text(
+                                      "${myCategories[index].name}",
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 25,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    separatorBuilder: (context, index) => SizedBox(
+                      width: 1,
+                    ),
+                    itemCount: myCategories.length,
+                  ),
+                ),
               ),
               InkWell(
                 child: ListTile(
@@ -584,5 +600,116 @@ class _homeState extends State<home> {
         ),
       ),
     ));
+  }
+
+  List<Vet> myVets = [];
+
+  getVets() async {
+    print('start get Vets');
+    await DioHelper.getData(url: AppEndPoints.getVets).then((value) {
+      value.data['vets'].forEach((e) {
+        myVets.add(Vet.fromJson(e));
+      });
+      print(myVets.length);
+      setState(() {
+        myVets;
+      });
+    }).catchError((err) {
+      print('get Vets Error');
+      print(err.toString());
+    });
+  }
+
+  List<Category> myCategories = [];
+
+  getCategories() async {
+    print('Start Get Category');
+    await DioHelper.getData(
+      url: AppEndPoints.getCategories,
+      token: globalUser.token,
+    ).then((value) {
+      print('get Categories');
+      print(value.data);
+      value.data['categories'].forEach((e) {
+        myCategories.add(Category.fromJson(e));
+      });
+      print(myCategories.length);
+      print(myCategories);
+      print('get Categories Success');
+      setState(() {
+        myCategories;
+      });
+    }).catchError((err) {
+      print('get Categories Error');
+      print(err.toString());
+    });
+  }
+
+  Widget buildCategoryCard(Category category) {
+    if (category.name == 'Dogs') {
+      return InkWell(
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (c) => Dog(
+              petId: category.id,
+            ),
+          ),
+        ),
+        child: categ(
+          name: category.name,
+          image: category.img,
+          context: context,
+        ),
+      );
+    }
+    if (category.name == 'Cats') {
+      return InkWell(
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (c) => Cat1(
+              petId: category.id,
+            ),
+          ),
+        ),
+        child: categ(
+          name: category.name,
+          image: category.img,
+          context: context,
+        ),
+      );
+    }
+    if (category.name == 'Fish') {
+      return InkWell(
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (c) => Fish(
+              petId: category.id,
+            ),
+          ),
+        ),
+        child: categ(
+          name: category.name,
+          image: category.img,
+          context: context,
+        ),
+      );
+    }
+    return null;
+  }
+
+  List<Recommendation> myProducts = [];
+  getProducts() async {
+    print('getProducts');
+    await DioHelper.getData(
+      url: AppEndPoints.products,
+    ).then((value) {
+      value.data['products'].forEach((e) {
+        myProducts.add(Recommendation.fromJson(e));
+      });
+      print(myProducts.length);
+      setState(() {
+        myProducts;
+      });
+    }).catchError((err) {});
   }
 }

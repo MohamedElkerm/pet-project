@@ -1,4 +1,9 @@
+import 'package:conditional_builder/conditional_builder.dart';
 import 'package:fff/components.dart';
+import 'package:fff/helper/constants.dart';
+import 'package:fff/helper/end_points.dart';
+import 'package:fff/helper/remote/dio_helper.dart';
+import 'package:fff/models/pets.dart';
 import 'package:fff/pages/profile/edit_profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +12,7 @@ import 'package:slide_countdown/slide_countdown.dart';
 
 class Profile extends StatefulWidget {
   Profile(
-      {Key? key,
+      {Key key,
       this.images,
       this.name,
       this.phone,
@@ -35,9 +40,15 @@ class _ProfileState extends State<Profile> {
   var ad = "30 homs st, mansora";
 
   @override
+  void initState() {
+    // TODO: implement initState
+    getMyAnimals();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
-      color:Color(0xffD4D2D2),
+      color: Color(0xffD4D2D2),
       width: double.infinity,
       height: double.infinity,
       child: SingleChildScrollView(
@@ -54,58 +65,71 @@ class _ProfileState extends State<Profile> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Container(
-                    alignment: Alignment.topRight,
-                    child: IconButton(
+                  alignment: Alignment.topRight,
+                  child: Row(
+                    children: [
+                      IconButton(
                         onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
                               builder: (c) => edit_profile(
-                                    nameed: na,
-                                    phoneed: ph,
-                                    addressed: ad,
-                                  )));
+                                nameed: na,
+                                phoneed: ph,
+                                addressed: ad,
+                              ),
+                            ),
+                          );
                         },
                         icon: Icon(
                           Icons.settings,
                           size: 40,
-                        ))),
+                        ),
+                      ),
+                      IconButton(
+                          onPressed: () {
+                            setState(() {
+                              myPets;
+                              globalUser;
+                            });
+                            print(globalUser.user.address);
+                          },
+                          icon: Icon(Icons.refresh)),
+                    ],
+                  ),
+                ),
                 SizedBox(
                   height: 30,
                 ),
                 Center(
-                    child: widget.images != null
-                        ? CircleAvatar(
-                            backgroundImage: FileImage(widget.images),
-                            radius: 95,
-                          )
-                        : Container(
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: AssetImage("images/pro1.jpg"),
-                                    fit: BoxFit.cover),
-                                border:
-                                    Border.all(color: Colors.black, width: 2),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(140))),
-                            width: 190,
-                            height: 190)),
-                Center(
-                    child: widget.name != null
-                        ? Text(
-                            "${widget.name}",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 25.sp),
-                          )
-                        : Text(
-                            "${na}",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 25.sp),
-                          )),
+                  child: widget.images != null
+                      ? CircleAvatar(
+                          backgroundImage: FileImage(widget.images),
+                          radius: 95,
+                        )
+                      : Container(
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: AssetImage("images/pro1.jpg"),
+                                  fit: BoxFit.cover),
+                              border: Border.all(color: Colors.black, width: 2),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(140))),
+                          width: 190,
+                          height: 190,
+                        ),
+                ),
                 Center(
                   child: Text(
-                    "@moh_ahmed",
+                    "${globalUser.user.firstname} ${globalUser.user.lastname}",
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 25.sp),
+                  ),
+                ),
+                Center(
+                  child: Text(
+                    "@${globalUser.user.username}",
                     style: TextStyle(
-                        color
-                            : Colors.black45,
+                        color: Colors.black45,
                         fontWeight: FontWeight.bold,
                         fontSize: 15),
                   ),
@@ -124,26 +148,16 @@ class _ProfileState extends State<Profile> {
                         ),
                       ),
                       Container(
-                          alignment: Alignment.topLeft,
-                          margin: EdgeInsets.only(left: 15),
-                          child: widget.phone != null
-                              ? Text(
-                                  "${widget.phone}",
-                                  style: TextStyle(
-                                      color: Colors.black45,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20.spMax),
-                                )
-                              : Container(
-                            margin: EdgeInsets.only(left: 15),
-                                child: Text(
-                                      "${ph}",
-                                    style: TextStyle(
-                                        color: Colors.black45,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20.spMax),
-                                  ),
-                              )),
+                        alignment: Alignment.topLeft,
+                        margin: EdgeInsets.only(left: 15),
+                        child: Text(
+                          "${globalUser.user.contactNumber}",
+                          style: TextStyle(
+                              color: Colors.black45,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.spMax),
+                        ),
+                      ),
                       SizedBox(
                         height: 8,
                       ),
@@ -157,26 +171,16 @@ class _ProfileState extends State<Profile> {
                         ),
                       ),
                       Container(
-                          alignment: Alignment.topLeft,
-                          margin: EdgeInsets.only(left: 15),
-                          child: widget.address != null
-                              ? Text(
-                                  "${widget.address}",
-                                  style: TextStyle(
-                                      color: Colors.black45,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20.sp),
-                                )
-                              : Container(
-                            margin: EdgeInsets.only(left: 15),
-                                child: Text(
-                                    "${ad}",
-                                    style: TextStyle(
-                                        color: Colors.black45,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20.sp),
-                                  ),
-                              )),
+                        alignment: Alignment.topLeft,
+                        margin: EdgeInsets.only(left: 15),
+                        child: Text(
+                          "${globalUser.user.address}",
+                          style: TextStyle(
+                              color: Colors.black45,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.sp),
+                        ),
+                      ),
                       SizedBox(
                         height: 12,
                       ),
@@ -187,7 +191,8 @@ class _ProfileState extends State<Profile> {
                         decoration: BoxDecoration(
                             color: Colors.white,
                             border: Border.all(width: 2, color: Colors.black),
-                            borderRadius: BorderRadius.all(Radius.circular(15))),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15))),
                         child: Column(
                           children: [
                             SizedBox(
@@ -211,314 +216,22 @@ class _ProfileState extends State<Profile> {
                             SizedBox(
                               height: 15.h,
                             ),
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: [
-                                  Dismissible(
-                                    key: UniqueKey(),
-                                    background: Container(
-                                      color: Colors.red,
-                                      child: Icon(
-                                        Icons.delete,
-                                        size: 60.h,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    direction: DismissDirection.vertical,
-                                    child: Stack(
-                                      children: [
-                                        Container(
-                                          margin: EdgeInsets.only(
-                                              left: 13, top: 10, bottom: 10),
-                                          width: 199,
-                                          height: 210,
-                                          alignment: Alignment.topRight,
-                                          decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                  image: AssetImage(
-                                                      "images/pro2.jpg"),
-                                                  fit: BoxFit.cover),
-                                              border: Border.all(
-                                                  width: 2, color: Colors.black),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(15))),
-                                          child: Padding(
-                                            padding: EdgeInsets.all(1.0),
-                                            child: SlideCountdown(
-                                              duration: Duration(days: 2),
-                                            ),
-                                          ),
-                                        ),
-                                        Positioned(
-                                          bottom: 11,
-                                          right: 1,
-                                          left: 15,
-                                          child: Center(
-                                            child: Container(
-                                              height: 35,
-                                              decoration: BoxDecoration(
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.black26,
-                                                    )
-                                                  ],
-                                                  borderRadius: BorderRadius.only(
-                                                      bottomRight:
-                                                          Radius.circular(15),
-                                                      bottomLeft:
-                                                          Radius.circular(15))),
-                                              width: 197,
-                                              child: Center(
-                                                child: Text(
-                                                  "Rex",
-                                                  style: TextStyle(
-                                                      decoration: TextDecoration
-                                                          .underline,
-                                                      decorationColor:
-                                                          Colors.green,
-                                                      decorationThickness: 2,
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 20),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
+                            ConditionalBuilder(
+                              condition: myPets.length > 0,
+                              builder: (BuildContext context) {
+                                return Container(
+                                  height: 250,
+                                  child: ListView.builder(
+                                    itemCount: myPets.length,
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder: (context, index) {
+                                      return buildAnimalCard(myPets[index]);
+                                    },
                                   ),
-                                  Dismissible(
-                                    key: UniqueKey(),
-                                    background: Container(
-                                      color: Colors.red,
-                                      child: Icon(
-                                        Icons.delete,
-                                        size: 60,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    direction: DismissDirection.vertical,
-                                    child: Stack(
-                                      children: [
-                                        Container(
-                                          margin: EdgeInsets.only(
-                                              left: 13, top: 10, bottom: 10),
-                                          width: 199,
-                                          height: 210,
-                                          alignment: Alignment.topRight,
-                                          decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                  image: AssetImage(
-                                                      "images/pro3.jpg"),
-                                                  fit: BoxFit.cover),
-                                              border: Border.all(
-                                                  width: 2, color: Colors.black),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(15))),
-                                          child: Padding(
-                                            padding: EdgeInsets.all(1.0),
-                                            child: SlideCountdown(
-                                              duration: Duration(days: 2),
-                                            ),
-                                          ),
-                                        ),
-                                        Positioned(
-                                          bottom: 11,
-                                          right: 1,
-                                          left: 15,
-                                          child: Center(
-                                            child: Container(
-                                              height: 35,
-                                              decoration: BoxDecoration(
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.black26,
-                                                    )
-                                                  ],
-                                                  borderRadius: BorderRadius.only(
-                                                      bottomRight:
-                                                          Radius.circular(15),
-                                                      bottomLeft:
-                                                          Radius.circular(15))),
-                                              width: 197,
-                                              child: Center(
-                                                child: Text(
-                                                  "Mavi",
-                                                  style: TextStyle(
-                                                      decoration: TextDecoration
-                                                          .underline,
-                                                      decorationColor:
-                                                          Colors.green,
-                                                      decorationThickness: 2,
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 20),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Dismissible(
-                                    key: UniqueKey(),
-                                    background: Container(
-                                      color: Colors.red,
-                                      child: Icon(
-                                        Icons.delete,
-                                        size: 60,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    direction: DismissDirection.vertical,
-                                    child: Stack(
-                                      children: [
-                                        Container(
-                                          margin: EdgeInsets.only(
-                                              left: 13, top: 10, bottom: 10),
-                                          width: 199,
-                                          height: 210,
-                                          alignment: Alignment.topRight,
-                                          decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                  image: AssetImage(
-                                                      "images/pro2.jpg"),
-                                                  fit: BoxFit.cover),
-                                              border: Border.all(
-                                                  width: 2, color: Colors.black),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(15))),
-                                          child: Padding(
-                                            padding: EdgeInsets.all(1.0),
-                                            child: SlideCountdown(
-                                              duration: Duration(days: 2),
-                                            ),
-                                          ),
-                                        ),
-                                        Positioned(
-                                          bottom: 11,
-                                          right: 1,
-                                          left: 15,
-                                          child: Center(
-                                            child: Container(
-                                              height: 35,
-                                              decoration: BoxDecoration(
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.black26,
-                                                    )
-                                                  ],
-                                                  borderRadius: BorderRadius.only(
-                                                      bottomRight:
-                                                          Radius.circular(15),
-                                                      bottomLeft:
-                                                          Radius.circular(15))),
-                                              width: 197,
-                                              child: Center(
-                                                child: Text(
-                                                  "Rex",
-                                                  style: TextStyle(
-                                                      decoration: TextDecoration
-                                                          .underline,
-                                                      decorationColor:
-                                                          Colors.green,
-                                                      decorationThickness: 2,
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 20),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Dismissible(
-                                    key: UniqueKey(),
-                                    direction: DismissDirection.vertical,
-                                    background: Container(
-                                      color: Colors.red,
-                                      child: Icon(
-                                        Icons.delete,
-                                        size: 60,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    child: Stack(
-                                      children: [
-                                        widget.imagestwo != null
-                                            ? Container(
-                                                margin: EdgeInsets.only(
-                                                    left: 13,
-                                                    top: 10,
-                                                    bottom: 10),
-                                                width: 199,
-                                                height: 210,
-                                                alignment: Alignment.topRight,
-                                                decoration: BoxDecoration(
-                                                    image: DecorationImage(
-                                                        image: FileImage(
-                                                            widget.imagestwo),
-                                                        fit: BoxFit.cover),
-                                                    border: Border.all(
-                                                        width: 2,
-                                                        color: Colors.black),
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(15))),
-                                                child: Padding(
-                                                  padding: EdgeInsets.all(1.0),
-                                                  child: SlideCountdown(
-                                                    duration: Duration(days: 30),
-                                                  ),
-                                                ),
-                                              )
-                                            : Container(),
-                                        Positioned(
-                                          bottom: 11,
-                                          right: 1,
-                                          left: 15,
-                                          child: Center(
-                                            child: Container(
-                                              height: 35,
-                                              decoration: BoxDecoration(
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.black26,
-                                                    )
-                                                  ],
-                                                  borderRadius: BorderRadius.only(
-                                                      bottomRight:
-                                                          Radius.circular(15),
-                                                      bottomLeft:
-                                                          Radius.circular(15))),
-                                              width: 197,
-                                              child: Center(
-                                                child: Text(
-                                                  "${widget.petName}",
-                                                  style: TextStyle(
-                                                      decoration: TextDecoration
-                                                          .underline,
-                                                      decorationColor:
-                                                          Colors.green,
-                                                      decorationThickness: 2,
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 20),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 12,
-                                  ),
-                                ],
-                              ),
-                            )
+                                );
+                              },
+                              fallback: (BuildContext context) => SizedBox(),
+                            ),
                           ],
                         ),
                       )),
@@ -534,5 +247,115 @@ class _ProfileState extends State<Profile> {
         ),
       ),
     );
+  }
+
+  Widget buildAnimalCard(Pet pet) {
+    return Dismissible(
+      key: UniqueKey(),
+      background: Container(
+        height: 100,
+        width: 50,
+        color: Colors.red,
+        child: Icon(
+          Icons.delete,
+          size: 60.h,
+          color: Colors.white,
+        ),
+      ),
+      // vertical
+      direction: DismissDirection.vertical,
+      child: Stack(
+        children: [
+          Container(
+            margin: EdgeInsets.only(left: 13, top: 10, bottom: 10),
+            width: 199,
+            height: 210,
+            alignment: Alignment.topRight,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image:
+                        NetworkImage('${AppEndPoints.imageBaseURL}${pet.img}'),
+                    fit: BoxFit.cover),
+                border: Border.all(width: 2, color: Colors.black),
+                borderRadius: BorderRadius.all(Radius.circular(15))),
+            child: Padding(
+              padding: EdgeInsets.all(1.0),
+              child: SlideCountdown(
+                duration: Duration(days: calcSlideDown(pet)),
+
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 11,
+            right: 1,
+            left: 15,
+            child: Center(
+              child: Container(
+                height: 35,
+                decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                      )
+                    ],
+                    borderRadius: BorderRadius.only(
+                        bottomRight: Radius.circular(15),
+                        bottomLeft: Radius.circular(15))),
+                width: 197,
+                child: Center(
+                  child: Text(
+                    pet.name,
+                    style: TextStyle(
+                        color: Colors.red,
+                        decoration: TextDecoration.underline,
+                        decorationColor: Colors.green,
+                        decorationThickness: 2,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20),
+                  ),
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  List<Pet> myPets = [];
+
+  getMyAnimals() async {
+    print('start get my pets');
+    await DioHelper.getData(
+      url: AppEndPoints.getUserPets,
+      token: globalUser.token,
+    ).then((value) {
+      print(value.data);
+      value.data['pets'].forEach((e) {
+        myPets.add(Pet.fromJson(e));
+        // print('e[vaccines] : ');
+        // print(e['vaccines']);
+        // print(e['vaccines']);
+      });
+      print(myPets.length);
+      print(myPets);
+      setState(() {
+        myPets;
+      });
+    }).catchError((err) {
+      print('error in get my pets');
+      print(err.toString());
+    });
+  }
+
+  int calcSlideDown(Pet pet) {
+    print(pet.vaccines.day.toInt() - DateTime.now().day.toInt());
+    // 1 - 18
+    int res = pet.vaccines.day.toInt() - DateTime.now().day.toInt();
+    if (res < 0) {
+      res *= -1;
+    }
+    return res;
   }
 }

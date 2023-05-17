@@ -1,16 +1,25 @@
 import 'dart:io';
 
+import 'package:conditional_builder/conditional_builder.dart';
+import 'package:dio/dio.dart';
 import 'package:fff/components.dart';
+import 'package:fff/helper/constants.dart';
+import 'package:fff/helper/end_points.dart';
+import 'package:fff/helper/remote/dio_helper.dart';
+import 'package:fff/helper/snack_helper.dart';
+import 'package:fff/models/auth.dart';
+import 'package:fff/models/pets.dart';
 import 'package:fff/pages/profile/add_animal.dart';
 import 'package:fff/pages/profile/profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:slide_countdown/slide_countdown.dart';
 
 class edit_profile extends StatefulWidget {
   edit_profile(
-      {Key? key,
+      {Key key,
       this.petimage,
       this.petName,
       this.time,
@@ -30,15 +39,22 @@ class edit_profile extends StatefulWidget {
 }
 
 class _edit_profileState extends State<edit_profile> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    getMyAnimals();
+  }
+
   var image;
   var nameController;
   var addressController;
   var phoneController;
   GlobalKey<FormState> formKey = new GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      color:Color(0xffD4D2D2),
+      color: Color(0xffD4D2D2),
       width: double.infinity,
       height: double.infinity,
       child: SingleChildScrollView(
@@ -61,22 +77,64 @@ class _edit_profileState extends State<edit_profile> {
                       child: IconButton(
                           onPressed: () {
                             var formdata = formKey.currentState;
-                            if (formdata!.validate()) {
+                            if (formdata.validate()) {
                               formdata.save();
                               print("valid");
+                              updateProfile(
+                                firstname: nameController.toString(),
+                                lastname: '',
+                                address: addressController.toString(),
+                              );
                             } else {
                               print("not valid");
                             }
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (c) => Profile(
-                                      name: nameController,
-                                      phone: phoneController,
-                                      address: addressController,
-                                      images: image,
-                                      imagestwo: widget.petimage,
-                                      petName: widget.petName,
-                                      time: widget.time,
-                                    )));
+                            // Navigator.of(context).push(
+                            //   MaterialPageRoute(
+                            //     builder: (c) => Profile(
+                            //       name: nameController,
+                            //       phone: phoneController,
+                            //       address: addressController,
+                            //       images: image,
+                            //       imagestwo: widget.petimage,
+                            //       petName: widget.petName,
+                            //       time: widget.time,
+                            //     ),
+                            //   ),
+                            // );
+                          },
+                          icon: Icon(
+                            Icons.task_alt_outlined,
+                            size: 40,
+                          ))),
+                  // upload image
+                  Container(
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                          onPressed: () async {
+                            // var formdata = formKey.currentState;
+                            if (image != null) {
+                              // print(image.toString());
+                              // var res =await AppEndPoints.uploadImage(image);
+                              // print('res : ');
+                              // print(res);
+                              // uploadImage(res);
+                              uploadImage(image);
+                            } else {
+                              print("not valid");
+                            }
+                            // Navigator.of(context).push(
+                            //   MaterialPageRoute(
+                            //     builder: (c) => Profile(
+                            //       name: nameController,
+                            //       phone: phoneController,
+                            //       address: addressController,
+                            //       images: image,
+                            //       imagestwo: widget.petimage,
+                            //       petName: widget.petName,
+                            //       time: widget.time,
+                            //     ),
+                            //   ),
+                            // );
                           },
                           icon: Icon(
                             Icons.task_alt_outlined,
@@ -105,106 +163,104 @@ class _edit_profileState extends State<edit_profile> {
                               backgroundImage: FileImage(image),
                             ),
                       Positioned(
-                          bottom: 1,
-                          top: 144,
-                          left: 120,
-                          child: IconButton(
-                              onPressed: () {
-                                showModalBottomSheet(
-                                    context: context,
-                                    builder: (context) {
-                                      return Container(
-                                        height: 200,
-                                        child: Column(
-                                          children: [
-                                            Container(
-                                              child: Text(
-                                                "Choose photo from",
-                                                style: TextStyle(
-                                                    fontSize: 30,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
+                        bottom: 1,
+                        top: 144,
+                        left: 120,
+                        child: IconButton(
+                            onPressed: () {
+                              showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) {
+                                    return Container(
+                                      height: 200,
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            child: Text(
+                                              "Choose photo from",
+                                              style: TextStyle(
+                                                  fontSize: 30,
+                                                  fontWeight: FontWeight.bold),
                                             ),
-                                            SizedBox(
-                                              height: 20,
+                                          ),
+                                          SizedBox(
+                                            height: 20,
+                                          ),
+                                          MaterialButton(
+                                            onPressed: () async {
+                                              var pickedImage =
+                                                  await ImagePicker().pickImage(
+                                                      source:
+                                                          ImageSource.camera);
+                                              if (pickedImage != null) {
+                                                setState(() {
+                                                  image =
+                                                      File(pickedImage.path);
+                                                });
+                                                Navigator.pop(context);
+                                              }
+                                            },
+                                            child: Row(
+                                              children: [
+                                                Icon(Icons.camera),
+                                                SizedBox(
+                                                  width: 20,
+                                                ),
+                                                Text(
+                                                  " camera",
+                                                  style: TextStyle(
+                                                      fontSize: 25,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ],
                                             ),
-                                            MaterialButton(
-                                              onPressed: () async {
-                                                var pickedImage =
-                                                    await ImagePicker()
-                                                        .pickImage(
-                                                            source: ImageSource
-                                                                .camera);
-                                                if (pickedImage != null) {
-                                                  setState(() {
-                                                    image =
-                                                        File(pickedImage.path);
-                                                  });
-                                                  Navigator.pop(context);
-                                                }
-                                              },
-                                              child: Row(
-                                                children: [
-                                                  Icon(Icons.camera),
-                                                  SizedBox(
-                                                    width: 20,
-                                                  ),
-                                                  Text(
-                                                    " camera",
-                                                    style: TextStyle(
-                                                        fontSize: 25,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 20,
-                                            ),
-                                            MaterialButton(
-                                              onPressed: () async {
-                                                var pickedImage =
-                                                    await ImagePicker()
-                                                        .pickImage(
-                                                            source: ImageSource
-                                                                .gallery);
-                                                if (pickedImage != null) {
-                                                  setState(() {
-                                                    image =
-                                                        File(pickedImage.path);
-                                                  });
+                                          ),
+                                          SizedBox(
+                                            height: 20,
+                                          ),
+                                          MaterialButton(
+                                            onPressed: () async {
+                                              var pickedImage =
+                                                  await ImagePicker().pickImage(
+                                                      source:
+                                                          ImageSource.gallery);
+                                              if (pickedImage != null) {
+                                                setState(() {
+                                                  image =
+                                                      File(pickedImage.path);
+                                                });
 
-                                                  Navigator.pop(context);
-                                                }
-                                              },
-                                              child: Row(
-                                                children: [
-                                                  Icon(Icons.photo_outlined),
-                                                  SizedBox(
-                                                    width: 20,
-                                                  ),
-                                                  Text(
-                                                    " gallery",
-                                                    style: TextStyle(
-                                                        fontSize: 25,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      );
-                                    });
-                              },
-                              icon: Icon(
-                                Icons.camera_alt,
-                                size: 43,
-                                color: Colors.white,
-                              )))
+                                                Navigator.pop(context);
+                                              }
+                                            },
+                                            child: Row(
+                                              children: [
+                                                Icon(Icons.photo_outlined),
+                                                SizedBox(
+                                                  width: 20,
+                                                ),
+                                                Text(
+                                                  " gallery",
+                                                  style: TextStyle(
+                                                      fontSize: 25,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    );
+                                  });
+                            },
+                            icon: Icon(
+                              Icons.camera_alt,
+                              size: 43,
+                              color: Colors.white,
+                            )),
+                      ),
                     ],
                   )),
                   SizedBox(
@@ -216,17 +272,18 @@ class _edit_profileState extends State<edit_profile> {
                         margin: EdgeInsets.only(
                             top: 10, bottom: 10, right: 25, left: 25),
                         child: defultForm(
-                            initialvalue: widget.nameed,
+                            initialvalue: globalUser.user.firstname +
+                                globalUser.user.lastname,
                             onsaved: (val) {
                               nameController = val;
                             },
                             labelText: "name",
                             validator: (value) =>
-                                value!.isEmpty ? "enter a valid Name" : null)),
+                                value.isEmpty ? "enter a valid Name" : null)),
                   ),
                   Center(
                     child: Text(
-                      "@moh_ahmed",
+                      "@${globalUser.user.username}",
                       style: TextStyle(
                           color: Colors.black45,
                           fontWeight: FontWeight.bold,
@@ -253,13 +310,13 @@ class _edit_profileState extends State<edit_profile> {
                             alignment: Alignment.topLeft,
                             margin: EdgeInsets.only(left: 15),
                             child: defultForm(
-                              initialvalue: widget.phoneed,
+                              initialvalue: globalUser.user.contactNumber,
                               onsaved: (val) {
                                 phoneController = val;
                               },
                               labelText: "phone",
                               validator: (value) =>
-                                  value!.isEmpty ? "enter a valid Phone" : null,
+                                  value.isEmpty ? "enter a valid Phone" : null,
                             )),
                         SizedBox(
                           height: 8,
@@ -280,12 +337,12 @@ class _edit_profileState extends State<edit_profile> {
                             alignment: Alignment.topLeft,
                             margin: EdgeInsets.only(left: 15),
                             child: defultForm(
-                              initialvalue: widget.addressed,
+                              initialvalue: globalUser.user.address,
                               onsaved: (val) {
                                 addressController = val;
                               },
                               labelText: "address",
-                              validator: (value) => value!.isEmpty
+                              validator: (value) => value.isEmpty
                                   ? "enter a valid Address"
                                   : null,
                             )),
@@ -304,7 +361,10 @@ class _edit_profileState extends State<edit_profile> {
                           child: Column(
                             children: [
                               SizedBox(
-                                height: 5,
+                                height: 5.h,
+                              ),
+                              SizedBox(
+                                width: 75.w,
                               ),
                               Row(
                                 mainAxisAlignment:
@@ -344,283 +404,29 @@ class _edit_profileState extends State<edit_profile> {
                                 ],
                               ),
                               Container(
-                                width: 70,
-                                height: 5,
+                                width: 70.w,
+                                height: 5.h,
                                 color: Colors.green,
                               ),
                               SizedBox(
-                                height: 15,
+                                height: 15.h,
                               ),
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  children: [
-                                    Stack(
-                                      children: [
-                                        Container(
-                                          margin: EdgeInsets.only(
-                                              left: 13, top: 10, bottom: 10),
-                                          width: 160,
-                                          height: 175,
-                                          decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                  image: AssetImage(
-                                                      "images/pro2.jpg"),
-                                                  fit: BoxFit.cover),
-                                              border: Border.all(
-                                                  width: 2,
-                                                  color: Colors.black),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(15))),
-                                        ),
-                                        Positioned(
-                                          bottom: 11,
-                                          right: 1,
-                                          left: 15,
-                                          child: Center(
-                                            child: Container(
-                                              height: 35,
-                                              decoration: BoxDecoration(
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.black26,
-                                                    )
-                                                  ],
-                                                  borderRadius:
-                                                      BorderRadius.only(
-                                                          bottomRight:
-                                                              Radius.circular(
-                                                                  15),
-                                                          bottomLeft:
-                                                              Radius.circular(
-                                                                  15))),
-                                              width: 160,
-                                              child: Center(
-                                                child: Text(
-                                                  "Rex",
-                                                  style: TextStyle(
-                                                      decoration: TextDecoration
-                                                          .underline,
-                                                      decorationColor:
-                                                          Colors.green,
-                                                      decorationThickness: 2,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 20),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      ],
+                              ConditionalBuilder(
+                                condition: myPets.length > 0,
+                                builder: (BuildContext context) {
+                                  return Container(
+                                    height: 250,
+                                    child: ListView.builder(
+                                      itemCount: myPets.length,
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (context, index) {
+                                        return buildAnimalCard(myPets[index]);
+                                      },
                                     ),
-                                    Stack(
-                                      children: [
-                                        Container(
-                                          margin: EdgeInsets.only(
-                                              left: 13, top: 10, bottom: 10),
-                                          width: 160,
-                                          height: 175,
-                                          decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                  image: AssetImage(
-                                                      "images/pro3.jpg"),
-                                                  fit: BoxFit.cover),
-                                              border: Border.all(
-                                                  width: 2,
-                                                  color: Colors.black),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(15))),
-                                        ),
-                                        Positioned(
-                                          bottom: 11,
-                                          right: 1,
-                                          left: 15,
-                                          child: Center(
-                                            child: Container(
-                                              height: 35,
-                                              decoration: BoxDecoration(
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.black26,
-                                                    )
-                                                  ],
-                                                  borderRadius:
-                                                      BorderRadius.only(
-                                                          bottomRight:
-                                                              Radius.circular(
-                                                                  15),
-                                                          bottomLeft:
-                                                              Radius.circular(
-                                                                  15))),
-                                              width: 160,
-                                              child: Center(
-                                                child: Text(
-                                                  "Mavi",
-                                                  style: TextStyle(
-                                                      decoration: TextDecoration
-                                                          .underline,
-                                                      decorationColor:
-                                                          Colors.green,
-                                                      decorationThickness: 2,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 20),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    Stack(
-                                      children: [
-                                        Container(
-                                          margin: EdgeInsets.only(
-                                              left: 13, top: 10, bottom: 10),
-                                          width: 160,
-                                          height: 175,
-                                          decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                  image: AssetImage(
-                                                      "images/pro2.jpg"),
-                                                  fit: BoxFit.cover),
-                                              border: Border.all(
-                                                  width: 2,
-                                                  color: Colors.black),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(15))),
-                                        ),
-                                        Positioned(
-                                          bottom: 11,
-                                          right: 1,
-                                          left: 15,
-                                          child: Center(
-                                            child: Container(
-                                              height: 35,
-                                              decoration: BoxDecoration(
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.black26,
-                                                    )
-                                                  ],
-                                                  borderRadius:
-                                                      BorderRadius.only(
-                                                          bottomRight:
-                                                              Radius.circular(
-                                                                  15),
-                                                          bottomLeft:
-                                                              Radius.circular(
-                                                                  15))),
-                                              width: 160,
-                                              child: Center(
-                                                child: Text(
-                                                  "Rex",
-                                                  style: TextStyle(
-                                                      decoration: TextDecoration
-                                                          .underline,
-                                                      decorationColor:
-                                                          Colors.green,
-                                                      decorationThickness: 2,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 20),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    Stack(
-                                      children: [
-                                        widget.petimage != null
-                                            ? Container(
-                                                margin: EdgeInsets.only(
-                                                    left: 13,
-                                                    top: 10,
-                                                    bottom: 10),
-                                                width: 160,
-                                                height: 175,
-                                                decoration: BoxDecoration(
-                                                    image: DecorationImage(
-                                                        image: FileImage(
-                                                            widget.petimage),
-                                                        fit: BoxFit.cover),
-                                                    border: Border.all(
-                                                        width: 2,
-                                                        color: Colors.black),
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                15))),
-                                              )
-                                            : Container(),
-                                        Positioned(
-                                          bottom: 11,
-                                          right: 1,
-                                          left: 15,
-                                          child: Center(
-                                            child: Container(
-                                              height: 35,
-                                              decoration: BoxDecoration(
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.black26,
-                                                    )
-                                                  ],
-                                                  borderRadius:
-                                                      BorderRadius.only(
-                                                          bottomRight:
-                                                              Radius.circular(
-                                                                  15),
-                                                          bottomLeft:
-                                                              Radius.circular(
-                                                                  15))),
-                                              width: 160,
-                                              child: Center(
-                                                child: Text(
-                                                  "${widget.petName}",
-                                                  style: TextStyle(
-                                                      decoration: TextDecoration
-                                                          .underline,
-                                                      decorationColor:
-                                                          Colors.green,
-                                                      decorationThickness: 2,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 20),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-
-                                    // animal(
-                                    //   nameAnimal: "REX",
-                                    // image: "images/pro2.jpg"),
-                                    // animal(
-                                    //     nameAnimal: "REX",
-                                    //     image: "images/pro3.jpg"),
-                                    // animal(
-                                    //     nameAnimal: "REX",
-                                    //     image: "images/pro2.jpg"),
-                                    // animal(
-                                    //     nameAnimal: "REX",
-                                    //     image: "images/pro3.jpg"),
-                                    // widget.petimage!=null?
-                                    // animal(
-                                    //     nameAnimal: "kolo",
-                                    //     image: FileImage(widget.petimage)
-                                    // ):Container(),
-                                    SizedBox(
-                                      width: 12,
-                                    ),
-                                  ],
-                                ),
-                              )
+                                  );
+                                },
+                                fallback: (BuildContext context) => SizedBox(),
+                              ),
                             ],
                           ),
                         )),
@@ -638,4 +444,197 @@ class _edit_profileState extends State<edit_profile> {
       ),
     );
   }
+
+  List<Pet> myPets = [];
+
+  getMyAnimals() async {
+    print('start get my pets');
+    await DioHelper.getData(
+      url: AppEndPoints.getUserPets,
+      token: globalUser.token,
+    ).then((value) {
+      print(value.data);
+      value.data['pets'].forEach((e) {
+        myPets.add(Pet.fromJson(e));
+      });
+      print(myPets.length);
+      print(myPets);
+      setState(() {
+        myPets;
+      });
+    }).catchError((err) {
+      print('error in get my pets');
+      print(err.toString());
+    });
+  }
+
+  Widget buildAnimalCard(Pet pet) {
+    return Dismissible(
+      key: UniqueKey(),
+      background: Container(
+        height: 100,
+        width: 50,
+        color: Colors.red,
+        child: Icon(
+          Icons.delete,
+          size: 60.h,
+          color: Colors.white,
+        ),
+      ),
+      // vertical
+      direction: DismissDirection.vertical,
+      child: Stack(
+        children: [
+          Container(
+            margin: EdgeInsets.only(left: 13, top: 10, bottom: 10),
+            width: 199,
+            height: 210,
+            alignment: Alignment.topRight,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image:
+                        NetworkImage('${AppEndPoints.imageBaseURL}${pet.img}'),
+                    fit: BoxFit.cover),
+                border: Border.all(width: 2, color: Colors.black),
+                borderRadius: BorderRadius.all(Radius.circular(15))),
+            child: Padding(
+              padding: EdgeInsets.all(1.0),
+              child: SlideCountdown(
+                duration: Duration(days: calcSlideDown(pet)),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 11,
+            right: 1,
+            left: 15,
+            child: Center(
+              child: Container(
+                height: 35,
+                decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                      )
+                    ],
+                    borderRadius: BorderRadius.only(
+                        bottomRight: Radius.circular(15),
+                        bottomLeft: Radius.circular(15))),
+                width: 197,
+                child: Center(
+                  child: Text(
+                    pet.name,
+                    style: TextStyle(
+                        color: Colors.red,
+                        decoration: TextDecoration.underline,
+                        decorationColor: Colors.green,
+                        decorationThickness: 2,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20),
+                  ),
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  int calcSlideDown(Pet pet) {
+    // print(pet.vaccines.day.toInt() - DateTime.now().day.toInt());
+    int res = pet.vaccines.day.toInt() - DateTime.now().day.toInt();
+    if (res < 0) {
+      res *= -1;
+    }
+    return res;
+  }
+
+  updateProfile({
+    @required firstname,
+    @required lastname,
+    @required address,
+  }) async {
+    print('start update profile');
+    print(firstname.toString());
+    print(lastname.toString());
+    print(address.toString());
+    await DioHelper.putData(
+      url: AppEndPoints.updateProfile,
+      data: {
+        "firstname": firstname.toString(),
+        "lastname": '.',
+        "address": address.toString(),
+      },
+      token: globalUser.token,
+    ).then((value) {
+      // login(email: globalUser.user.email, password: userPassword);
+      showSnackBar(
+          context: context, text: 'updated success', clr: Colors.green);
+      Navigator.of(context).pop();
+    }).catchError((err) {
+      showSnackBar(context: context, text: 'updated Error', clr: Colors.red);
+      print(err.toString());
+    });
+  }
+
+  uploadImage(File file) async {
+    print('start upload');
+    // final res = await MultipartFile.fromFile(file.path, filename: 'file.jpg');
+    // print(file.path);
+    // var formData = FormData.fromMap({
+    //   'file': await MultipartFile.fromFile(file.path, filename: 'fileName'),
+    // });
+    // print(file.path);
+    // var fileName = file.path.split('/').last;
+
+    var finalResult = await MultipartFile.fromFile(file.path);
+    FormData formData = FormData.fromMap({
+      "img": finalResult,
+    });
+
+    await DioHelper.putImage(
+      url: AppEndPoints.changeImage,
+      token: globalUser.token,
+      data: formData,
+    ).then((value) {
+      showSnackBar(
+          context: context, text: 'upload image success', clr: Colors.green);
+    }).catchError((err) {
+      showSnackBar(
+          context: context, text: 'upload image failed', clr: Colors.red);
+      print(err.toString());
+    });
+  }
+
+
+
+
+  // login({@required email, @required password}) async {
+  //   // print('press2');
+  //   // print(email);
+  //   // print(password);
+  //   await DioHelper.postData(url: AppEndPoints.login, data: {
+  //     'email':email,
+  //     'password':password,
+  //   }).then((value) {
+  //     CartItemsForBadges.clear();
+  //
+  //     print('login Success');
+  //     print(value.toString());
+  //     setState(() {
+  //       globalUser = Auth.fromJson(value.data);
+  //
+  //     });
+  //     print("data from Json");
+  //     print(globalUser);
+  //     // toggleBetweenScreens(globalUser);
+  //   }).catchError((err) {
+  //     print('login Error : ');
+  //     print(err.toString());
+  //   });
+  //   // print('press4');
+  // }
+
+
 }

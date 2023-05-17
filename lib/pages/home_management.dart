@@ -1,9 +1,15 @@
 import 'package:fff/auth/signin.dart';
+import 'package:fff/helper/constants.dart';
+import 'package:fff/helper/end_points.dart';
+import 'package:fff/helper/remote/dio_helper.dart';
+import 'package:fff/helper/snack_helper.dart';
+import 'package:fff/models/cart_item.dart';
 import 'package:fff/pages/doctorpage/doctors.dart';
 import 'package:fff/pages/profile/profile.dart';
 import 'package:fff/pages/search.dart';
 import 'package:fff/pages/about.dart';
 import 'package:fff/pages/services.dart';
+import 'package:fff/pages/shop/carts.dart';
 import 'package:fff/pages/shop/favorite.dart';
 import 'package:fff/pages/shop/shop.dart';
 import 'package:fff/vet/clinic.dart';
@@ -16,11 +22,12 @@ import 'categorypage/category.dart';
 import 'doctorpage/my_booking.dart';
 import 'doctorpage/notification.dart';
 import 'home.dart';
+import 'package:badges/badges.dart' as badges;
 
 class home_management extends StatefulWidget {
-
-  home_management({Key? key,this.type,this.index}) : super(key: key);
-  var type;var index;
+  home_management({Key key, this.type, this.index}) : super(key: key);
+  var type;
+  var index;
 
   @override
   State<home_management> createState() => _home_managementState();
@@ -34,16 +41,23 @@ class _home_managementState extends State<home_management> {
       Icons.home,
       size: 40,
     ),
-     Icon(
-       Icons.pets,
-        size: 40,
-       ),
+    Icon(
+      Icons.pets,
+      size: 40,
+    ),
     Icon(Icons.person_pin, size: 40),
   ];
 
   int index = 0;
   List<Widget> pages = [shop(), category(), home(), doctors(), Profile()];
-  var name =["My Booking","Vet Booking","My Booking"];
+  var name = ["My Booking", "Vet Booking", "My Booking"];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getMyCart();
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -109,124 +123,286 @@ class _home_managementState extends State<home_management> {
                   ),
                   actions: [
                     IconButton(
-                        onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Notifi(),));
-                        },
-                        icon: Icon(
-                          Icons.notifications,
-                          size: 35,color:Colors.white,
-                        )),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Notifi(),
+                          ),
+                        );
+                      },
+                      icon: Icon(
+                        Icons.notifications,
+                        size: 35,
+                        color: Colors.white,
+                      ),
+                    ),
                     IconButton(
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>MySearch()));
+                      },
+                      icon: Icon(
+                        Icons.search,
+                        size: 35,
+                        color: Colors.white,
+                      ),
+                    ),
+                    badges.Badge(
+                      position: badges.BadgePosition.topEnd(
+                        top: 0,
+                        end: 1,
+                      ),
+                      badgeAnimation: badges.BadgeAnimation.scale(
+                        animationDuration: Duration(
+                          milliseconds: 300,
+                        ),
+                      ),
+                      badgeContent: Text("5"),
+                      badgeStyle: badges.BadgeStyle(
+                        badgeColor: Colors.white,
+                        borderSide: BorderSide(
+                          color: Colors.orangeAccent,
+                          width: 2,
+                        ),
+                      ),
+                      child: IconButton(
                         onPressed: () {
-                          showSearch(context: context, delegate: DataSearch());
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => favorite(),
+                            ),
+                          );
                         },
                         icon: Icon(
-                          Icons.search,
-                          size: 35,color:Colors.white,
-                        )),
+                          Icons.favorite,
+                          color: Colors.redAccent,
+                          size: 30,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 4,
+                    ),
+                    badges.Badge(
+                      position: badges.BadgePosition.topEnd(top: 0, end: 1),
+                      badgeAnimation: badges.BadgeAnimation.scale(
+                          animationDuration: Duration(milliseconds: 300)),
+                      badgeContent: Text(CartItemsForBadges.length.toString()),
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => cart(),
+                            ),
+                          );
+                        },
+                        icon: Icon(
+                          Icons.shopping_cart,
+                          color: Colors.black,
+                          size: 30,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 15,
+                    ),
                   ]),
-
               drawer: Container(
-                child: Drawer(backgroundColor:Colors.grey[400],width: 230,
+                child: Drawer(
+                    backgroundColor: Colors.grey[400],
+                    width: 230,
                     child: Column(
-                  children: [
-                    SizedBox(height: 55,),
-                    Container(
-                      width: double.infinity,
-                      color: Color(0xff182747),
-                      child: ListTile(
-                        title: MaterialButton(onPressed: (){
-                          if( widget.type =="Customer"){
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => MyBooking(),));
-
-                          }if(widget.type=="Trader") {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => MyBooking(),));
-                          }if(widget.type=="Vet"){
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => clinic(),));
-                          }
-                        },child:Text(name[widget.index],style: TextStyle(color: Colors.white),)),
-                        leading: Icon(Icons.bookmark_added,color: Colors.white,),
-
-                      ),
-                    ),
-                    SizedBox(height: 10,),
-                    if(widget.type =="Customer"|| widget.type=="Vet") Container() else Container(
-                      width: double.infinity,
-                      color: Color(0xff182747),
-                      child: ListTile(
-                        title: MaterialButton(onPressed: (){
-                          if(widget.type=="Trader") {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => AddProdect(),));
-                          }
-                        },child:Text("Add_prodects",style: TextStyle(color: Colors.white),)),
-                        leading: Icon(Icons.add_circle,color: Colors.white,),
-
-                      ),
-                    ),
-                    if(widget.type =="Customer"|| widget.type=="Vet") SizedBox() else SizedBox(height: 10,),
-                    if(widget.type =="Customer"|| widget.type=="Vet") Container() else Container(
-                        width: double.infinity,
-                        color: Color(0xff182747),
-                        child: ListTile(
-                          title: MaterialButton(onPressed: (){
-                           if(widget.type=="Trader") {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => MyProdect(),));
-                            }
-                          },child:Text("My_Prodect",style: TextStyle(color: Colors.white),)),
-                          leading: Icon(Icons.add_business_rounded,color: Colors.white,),
-
-                   ),
-                      ),
-                    if(widget.type =="Customer"|| widget.type=="Vet") SizedBox() else SizedBox(height: 10,),
-                    Container(color: Color(0xff182747),
-                      child: ListTile(
-                        leading: Icon(
-                          Icons.miscellaneous_services,
-                          color: Colors.white,
+                      children: [
+                        SizedBox(
+                          height: 55,
                         ),
-                        title: Text(
-                          "Services",
-                          style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                        Container(
+                          width: double.infinity,
+                          color: Color(0xff182747),
+                          child: ListTile(
+                            title: MaterialButton(
+                                onPressed: () {
+                                  if (widget.type == "Customer") {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => MyBooking(),
+                                        ));
+                                  }
+                                  if (widget.type == "Trader") {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => MyBooking(),
+                                        ));
+                                  }
+                                  if (widget.type == "Vet") {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => clinic(),
+                                        ));
+                                  }
+                                },
+                                child: Text(
+                                  name[widget.index],
+                                  style: TextStyle(color: Colors.white),
+                                )),
+                            leading: Icon(
+                              Icons.bookmark_added,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
-                        onTap: () {
-                          Navigator.of(context).push(PageRouteBuilder(pageBuilder:(context, animation, secondaryAnimation) => Services(), ));
-                        },
-                      ),
-                    ),
-                    SizedBox(height: 10,),
-                    Container(
-                      color: Color(0xff182747),
-                      child: ListTile(
-                        leading:
-                            Icon(Icons.add_box_outlined, color: Colors.white,),
-                        title: Text(
-                          "About",
-                          style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,),
+                        SizedBox(
+                          height: 10,
                         ),
-                        onTap: () {
-                          Navigator.of(context).push(PageRouteBuilder(pageBuilder:(context, animation, secondaryAnimation) => About(), ));
-
-                        },
-                      ),
-                    ),
-                    SizedBox(height: 10,),
-                    Container(
-                      color: Color(0xff182747),
-                      child: ListTile(
-                        leading: Icon(Icons.exit_to_app, color: Colors.white,),
-                        title: Text(
-                          "Log Out",
-                          style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,),
+                        if (widget.type == "Customer" || widget.type == "Vet")
+                          Container()
+                        else
+                          Container(
+                            width: double.infinity,
+                            color: Color(0xff182747),
+                            child: ListTile(
+                              title: MaterialButton(
+                                  onPressed: () {
+                                    if (widget.type == "Trader") {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => AddProdect(),
+                                          ));
+                                    }
+                                  },
+                                  child: Text(
+                                    "Add_prodects",
+                                    style: TextStyle(color: Colors.white),
+                                  )),
+                              leading: Icon(
+                                Icons.add_circle,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        if (widget.type == "Customer" || widget.type == "Vet")
+                          SizedBox()
+                        else
+                          SizedBox(
+                            height: 10,
+                          ),
+                        if (widget.type == "Customer" || widget.type == "Vet")
+                          Container()
+                        else
+                          Container(
+                            width: double.infinity,
+                            color: Color(0xff182747),
+                            child: ListTile(
+                              title: MaterialButton(
+                                  onPressed: () {
+                                    if (widget.type == "Trader") {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => MyProdect(),
+                                          ));
+                                    }
+                                  },
+                                  child: Text(
+                                    "My_Prodect",
+                                    style: TextStyle(color: Colors.white),
+                                  )),
+                              leading: Icon(
+                                Icons.add_business_rounded,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        if (widget.type == "Customer" || widget.type == "Vet")
+                          SizedBox()
+                        else
+                          SizedBox(
+                            height: 10,
+                          ),
+                        Container(
+                          color: Color(0xff182747),
+                          child: ListTile(
+                            leading: Icon(
+                              Icons.miscellaneous_services,
+                              color: Colors.white,
+                            ),
+                            title: Text(
+                              "Services",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                            ),
+                            onTap: () {
+                              Navigator.of(context).push(PageRouteBuilder(
+                                pageBuilder:
+                                    (context, animation, secondaryAnimation) =>
+                                        Services(),
+                              ));
+                            },
+                          ),
                         ),
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => Signin()));
-                        },
-                      ),
-                    ),
-                    SizedBox(height: 10,),
-                  ],
-                )),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          color: Color(0xff182747),
+                          child: ListTile(
+                            leading: Icon(
+                              Icons.add_box_outlined,
+                              color: Colors.white,
+                            ),
+                            title: Text(
+                              "About",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            onTap: () {
+                              Navigator.of(context).push(PageRouteBuilder(
+                                pageBuilder:
+                                    (context, animation, secondaryAnimation) =>
+                                        About(),
+                              ));
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          color: Color(0xff182747),
+                          child: ListTile(
+                            leading: Icon(
+                              Icons.exit_to_app,
+                              color: Colors.white,
+                            ),
+                            title: Text(
+                              "Log Out",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Signin()));
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                      ],
+                    )),
               ),
               body: CupertinoTabScaffold(
                 tabBar: CupertinoTabBar(
@@ -260,7 +436,7 @@ class _home_managementState extends State<home_management> {
                       return CupertinoTabView(
                         builder: (context) {
                           // if(widget.type=="Customer"){
-                             return  CupertinoPageScaffold(child: shop());
+                          return CupertinoPageScaffold(child: shop());
                           // }if(widget.type=="Trader")
                           // { return  CupertinoPageScaffold(child: shop_trader());}
                           // if(widget.type=="Vet"){
@@ -283,19 +459,19 @@ class _home_managementState extends State<home_management> {
                     case 3:
                       return CupertinoTabView(
                         builder: (context) {
-                        //    if(widget.type=="Customer"){
-                            return  CupertinoPageScaffold(child: doctors());
-                        //    }if(widget.type=="Trader"){ return  CupertinoPageScaffold(child: doctors());}
-                        //    if(widget.type=="Vet"){
-                        //      return CupertinoPageScaffold(child: clinic());
-                        //    }else{return CupertinoPageScaffold(child: error());};
-                         },
+                          //    if(widget.type=="Customer"){
+                          return CupertinoPageScaffold(child: doctors());
+                          //    }if(widget.type=="Trader"){ return  CupertinoPageScaffold(child: doctors());}
+                          //    if(widget.type=="Vet"){
+                          //      return CupertinoPageScaffold(child: clinic());
+                          //    }else{return CupertinoPageScaffold(child: error());};
+                        },
                       );
                     case 4:
                       return CupertinoTabView(
                         builder: (context) {
                           // if(widget.type=="Customer"){
-                             return  CupertinoPageScaffold(child: Profile());
+                          return CupertinoPageScaffold(child: Profile());
                           // }if(widget.type=="Trader")
                           // { return  CupertinoPageScaffold(child: profile_trader());}
                           // if(widget.type=="Vet"){
@@ -314,4 +490,23 @@ class _home_managementState extends State<home_management> {
               ))),
     );
   }
+
+  getMyCart() async {
+    CartItemsForBadges.clear();
+    print('start get my cart');
+    await DioHelper.getData(
+      url: AppEndPoints.getMyCart,
+      token: globalUser.token,
+    ).then((value) {
+      value.data['cartItems'].forEach((e){
+        CartItemsForBadges.add(CartItem.fromJson(e));
+      });
+      setState(() {
+        CartItemsForBadges;
+      });
+    }).catchError((err) {
+      showSnackBar(context: context, text: 'Erro in get My Cart', clr: Colors.red);
+    });
+  }
+
 }

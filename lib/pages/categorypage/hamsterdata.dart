@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HamsterData extends StatefulWidget {
-  const HamsterData({Key? key, this.datahamster}) : super(key: key);
+  const HamsterData({Key key, this.datahamster}) : super(key: key);
 
   final datahamster;
 
